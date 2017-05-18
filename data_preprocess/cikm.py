@@ -25,6 +25,34 @@ def LineReader(filename,batch_size=1) :
     if len(labels) > 0:
         yield np.array(datas), np.array(labels)
 
+def SubLineReader(filename,batch_size=1) :
+    datas = []
+    labels = []
+    with open(filename) as f:
+        # for line in f.readlines():
+        while (1):
+            line = f.readline()
+            if line == "" or line is None:
+                break
+            line = line.strip().split(',')
+            X_train = map(float, line[2].split(' '))
+            x_train = np.reshape(X_train, [-1, 15,4, 101, 101])
+            x_train_sub = []
+            for i in xrange(14):
+                x_train_s = x_train[:,i+1,:,:,:] - x_train[:,i,:,:,:]
+                # print x_train_s.shape
+                x_train_sub.append(x_train_s)
+            x_train = np.array(x_train_sub).flatten()
+            datas.append(x_train)
+            labels.append(float(line[1]))
+            if len(labels) >= batch_size:
+                yield np.array(datas), np.array(labels)
+                datas = []
+                labels = []
+    if len(labels) > 0:
+        yield np.array(datas), np.array(labels)
+
+
 
 
 def CenterFeatureReader(filename,center_radius,batch_size=1) :
