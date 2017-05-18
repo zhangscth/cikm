@@ -4,6 +4,7 @@ import  tensorflow as tf
 from tensorflow.contrib import rnn
 import numpy as np
 import pdb
+from tqdm import tqdm
 
 
 root="/home/zsc/下载/data_new/CIKM2017_train/"
@@ -90,9 +91,9 @@ from data_preprocess.read_file import readFile
 
 with tf.Session() as sess:
     sess.run(init)
-    for e in xrange(epoch):
+    for e in range(epoch):
         reader = SubLineReader(root + "train.txt", batch_size=batch_size)
-        for i in xrange(num_sample//batch_size-1):
+        for i in tqdm(range(num_sample//batch_size-1)):
 
             print "========================="
             x_batch,y_batch = reader.next()
